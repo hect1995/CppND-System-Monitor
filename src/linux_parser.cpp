@@ -67,7 +67,28 @@ vector<int> LinuxParser::Pids() {
 }
 
 // TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+float LinuxParser::MemoryUtilization() {
+  vector<int> pids = LinuxParser::Pids();
+  string line;
+  string key;
+  string value;
+  int counter = 0;
+  for (auto process:pids)
+  {
+    std::ifstream stream(kProcDirectory + to_string(process)+ kStatusFilename);
+    if (stream.is_open()) {
+      std::getline(stream, line);
+      std::istringstream linestream(line);
+      linestream >> key >> value;
+      if (key == "VmSize:")
+      {
+        counter += stoi(value); // value is in kB
+      }
+    }
+  }
+
+  return counter/1000; // It is returned as MB 
+}
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() { return 0; }
