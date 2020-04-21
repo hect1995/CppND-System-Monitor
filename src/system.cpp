@@ -14,6 +14,10 @@ using std::size_t;
 using std::string;
 using std::vector;
 
+System::System() {
+    Processor processor;
+    cpu_ = processor;
+}
 // TODO: Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
