@@ -18,21 +18,21 @@ float Processor::Utilization() {
     long total = idle + non_idle;
 
     // differentiate: actual value minus the previous one
-    long totald = total - prev_total;
-    long idled = idle - prev_idle;
+    float totald = total - prev_total;
+    float idled = idle - prev_idle;
     setMembers(data);
     return (totald - idled)/totald;    
 }
 
-void setMembers(std::vector<long> updated_members)
+void Processor::setMembers(std::vector<long> updated_members)
 {
-    long m_user = updated_members[LinuxParser::CPUStates::kUser_];
-    long m_nice = updated_members[LinuxParser::CPUStates::kNice_];
-    long m_system = updated_members[LinuxParser::CPUStates::kSystem_];
-    long m_idle = updated_members[LinuxParser::CPUStates::kIdle_];
-    long m_iowait = updated_members[LinuxParser::CPUStates::kIOwait_];
-    long m_irq = updated_members[LinuxParser::CPUStates::kIRQ_];
-    long m_softirq = updated_members[LinuxParser::CPUStates::kSoftIRQ_];
-    long m_steal = updated_members[LinuxParser::CPUStates::kSteal_];
+    m_user = updated_members[LinuxParser::CPUStates::kUser_];
+    m_nice = updated_members[LinuxParser::CPUStates::kNice_];
+    m_system = updated_members[LinuxParser::CPUStates::kSystem_];
+    m_idle = updated_members[LinuxParser::CPUStates::kIdle_];
+    m_iowait = updated_members[LinuxParser::CPUStates::kIOwait_];
+    m_irq = updated_members[LinuxParser::CPUStates::kIRQ_];
+    m_softirq = updated_members[LinuxParser::CPUStates::kSoftIRQ_];
+    m_steal = updated_members[LinuxParser::CPUStates::kSteal_];
     
 }

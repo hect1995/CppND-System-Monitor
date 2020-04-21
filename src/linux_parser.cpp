@@ -182,7 +182,17 @@ int LinuxParser::RunningProcesses() {
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Command(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::Command(int pid) {
+  string line;
+  string key;
+  string value;
+  int counter = 0;
+  std::ifstream stream(kProcDirectory + to_string(pid)+ kCmdlineFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+  }
+  return line;
+}
 
 // TODO: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
@@ -198,7 +208,7 @@ string LinuxParser::Ram(int pid) {
       linestream >> key >> value;
       if (key == "VmSize:")
       {
-        return to_string(stoi(value)*0.001); // value is in kB
+        return to_string(stoi(value)/1000); // value is in kB
       }
     }
   }
@@ -230,14 +240,14 @@ string LinuxParser::User(int pid) {
   std::ifstream stream(kPasswordPath);
   if (stream.is_open()) {
     while (std::getline(stream, line)) {
-      std::istringstream linestream(line);
       std::replace(line.begin(), line.end(), ' ', '_');
       std::replace(line.begin(), line.end(), ':', ' ');
-      while (linestream >> key >> x >> value) {
-        if (value == user) {
-          return key;
-        }
+      std::istringstream linestream(line);
+      linestream >> key >> x >> value;
+      if (value == user) {
+        return key;
       }
+    
     }
   }
 
@@ -246,4 +256,46 @@ string LinuxParser::User(int pid) {
 
 // TODO: Read and return the uptime of a process
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::UpTime(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::UpTime(int pid) {
+  string line;
+  string value;
+  float starttime;
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    int counter = 1;
+    while( counter <23)
+    {
+      linestream >> value;
+      if (counter==22){
+        starttime=stof(value);
+      }
+      counter ++;
+    }
+  }
+  return starttime;
+}
+
+std::vector<float> LinuxParser::CpuUtilization(int pid){
+  string line;
+  string value;
+  float utime, stime, cutime,cstime,starttime;
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line);
+    int counter = 1;
+    while( counter <23)
+    {
+      linestream >> value;
+      if (counter==14){utime=stof(value);}
+      else if (counter==15){stime=stof(value);}
+      else if (counter==16){cutime=stof(value);}
+      else if (counter==17){cstime=stof(value);}
+      else if (counter==22){starttime=stof(value);}
+      counter ++;
+    }
+  }
+  return {utime, stime, cutime,cstime,starttime};
+}

@@ -19,10 +19,20 @@ System::System() {
     cpu_ = processor;
 }
 // TODO: Return the system's CPU
-Processor& System::Cpu() { return cpu_; }
+Processor& System::Cpu() {return cpu_; }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes() {
+    vector<int> ids_processes = LinuxParser::Pids();
+    processes_ = {}; 
+    for (auto id:ids_processes)
+    {
+        Process process{id}; //TODO: Maybe avoid creating everytime a new one
+        processes_.emplace_back(process);
+    }
+    std::sort(processes_.begin(),processes_.end());
+    return processes_;
+}
 
 // TODO: Return the system's kernel identifier (string)
 std::string System::Kernel() const{return LinuxParser::Kernel();}
