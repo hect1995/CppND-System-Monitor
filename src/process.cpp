@@ -44,5 +44,5 @@ long int Process::UpTime() { return LinuxParser::UpTime(m_id); }
 // TODO: Overload the "less than" comparison operator for Process objects
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process & a){ 
-    return !(CpuUtilization() < a.CpuUtilization()); 
+    return CpuUtilization() > a.CpuUtilization(); 
 }

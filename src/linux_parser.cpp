@@ -186,7 +186,6 @@ string LinuxParser::Command(int pid) {
   string line;
   string key;
   string value;
-  int counter = 0;
   std::ifstream stream(kProcDirectory + to_string(pid)+ kCmdlineFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
@@ -200,7 +199,6 @@ string LinuxParser::Ram(int pid) {
   string line;
   string key;
   string value;
-  int counter = 0;
   std::ifstream stream(kProcDirectory + to_string(pid)+ kStatusFilename);
   if (stream.is_open()) {
     while (std::getline(stream, line)) {
@@ -231,6 +229,7 @@ string LinuxParser::Uid(int pid) {
       }
     }
   }
+  return value;
 }
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function

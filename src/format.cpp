@@ -19,5 +19,5 @@ string Format::ElapsedTime(long seconds_pass) {
     std::string minute_str = (minute<10) ? "0" + std::to_string(minute) : std::to_string(minute);
     second %= MIN;
     std::string second_str = (second<10) ? "0" + std::to_string(second) : std::to_string(second);
-    return hour_str + "::" + minute_str + "::" + second_str;
+    return hour_str + ":" + minute_str + ":" + second_str;
 }
